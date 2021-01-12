@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
 
-    tools:context=".ui.activity.WeatherActivity">
+    tools:context=".ui.activity.WeatherActivityForMyLocation">
 
     <androidx.constraintlayout.widget.ConstraintLayout 
-       android:id="@+id/constraintLayout"
+       android:id="@+id/constraintLayout_mine"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
@@ -96,7 +96,7 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.55" />
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
+            android:id="@+id/materialCardView_mine"
             app:layout_constraintTop_toBottomOf="@+id/guideline2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -163,7 +163,7 @@
 <!--            />-->
 <!--    </RelativeLayout>-->
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/progressBar"
+        android:id="@+id/progressBar_mine"
         android:layout_width="100dp"
         android:visibility="gone"
         app:lottie_rawRes="@raw/progress_bar"
@@ -172,13 +172,12 @@
         android:layout_height="100dp"
         android:layout_centerInParent="true"/>
     <RelativeLayout
-        android:id="@+id/relativeLayout"
+        android:id="@+id/relativeLayout_mine"
         android:layout_width="match_parent"
-        android:visibility="gone"
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/Cancel"
+            android:id="@+id/Cancel_mine"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cancel"
@@ -200,7 +199,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"/>
         <TextView
-            android:id="@+id/city_name"
+            android:id="@+id/city_name_mine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Delhi"
@@ -209,11 +208,11 @@
             android:gravity="center"
             android:layout_marginTop="50dp"/>
         <TextView
-            android:id="@+id/description"
+            android:id="@+id/description_mine"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Haze"
-            android:layout_below="@+id/city_name"
+            android:layout_below="@+id/city_name_mine"
             android:textSize="25sp"
             android:gravity="center"
             />
@@ -221,10 +220,10 @@
             android:id="@+id/rl1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/description"
+            android:layout_below="@+id/description_mine"
             android:layout_centerHorizontal="true">
             <TextView
-                android:id="@+id/temp"
+                android:id="@+id/temp_mine"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="19"
@@ -237,7 +236,7 @@
                 android:layout_height="wrap_content"
 
                 android:src="@drawable/ic_outline_trip_origin_24"
-                android:layout_toRightOf="@+id/temp"/>
+                android:layout_toRightOf="@+id/temp_mine"/>
         </RelativeLayout>
         <LinearLayout
             android:id="@+id/ll1"
@@ -257,7 +256,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/max_temp"
+                    android:id="@+id/max_temp_mine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/_19"
@@ -267,7 +266,7 @@
                 <ImageView
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:layout_toEndOf="@id/max_temp"
+                    android:layout_toEndOf="@id/max_temp_mine"
                     android:src="@drawable/ic_outline_trip_origin_24"
                     />
             </RelativeLayout>
@@ -291,7 +290,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/min_temp"
+                    android:id="@+id/min_temp_mine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/_7"
@@ -301,7 +300,7 @@
                 <ImageView
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:layout_toEndOf="@+id/min_temp"
+                    android:layout_toEndOf="@+id/min_temp_mine"
                     android:src="@drawable/ic_outline_trip_origin_24"
                     />
             </RelativeLayout>
@@ -353,7 +352,7 @@
                             android:textSize="20sp"
                             android:layout_gravity="center"/>
                         <TextView
-                            android:id="@+id/txtPressure"
+                            android:id="@+id/txtPressure_mine"
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -395,7 +394,7 @@
                             android:textSize="20sp"
                             android:layout_gravity="center"/>
                         <TextView
-                            android:id="@+id/txtHumidity"
+                            android:id="@+id/txtHumidity_mine"
 
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
@@ -440,7 +439,7 @@
                             android:textSize="20sp"
                             android:layout_gravity="center"/>
                         <TextView
-                            android:id="@+id/txtWind"
+                            android:id="@+id/txtWind_mine"
 
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
@@ -463,7 +462,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cloudness"
+                    android:id="@+id/cloudness_mine"
                     android:layout_width="120dp"
                     android:background="@drawable/card_view"
                     card_view:cardElevation="4dp"
@@ -494,7 +493,7 @@
                             android:textSize="20sp"
                             android:layout_gravity="center"/>
                         <TextView
-                            android:id="@+id/txtCloudness"
+                            android:id="@+id/txtCloudness_mine"
 
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
@@ -506,7 +505,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sunrise"
+                    android:id="@+id/sunrise_mine"
                     android:background="@drawable/card_view"
                     card_view:cardElevation="4dp"
                     card_view:cardCornerRadius="5dp"
@@ -538,7 +537,7 @@
                             android:textSize="20sp"
                             android:textStyle="bold" />
                         <TextView
-                            android:id="@+id/txtSunrise"
+                            android:id="@+id/txtSunrise_mine"
 
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
@@ -582,7 +581,7 @@
                             android:textSize="20sp"
                             android:layout_gravity="center"/>
                         <TextView
-                            android:id="@+id/txtSunset"
+                            android:id="@+id/txtSunset_mine"
                             android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

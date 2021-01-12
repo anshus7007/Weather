@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:id="@+id/frameLayout"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/right_rel"
+        android:layout_width="wrap_content"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+
+        android:padding="2dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/txt_right_city_bg">
+        <TextView
+            android:id="@+id/Rightcity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:textSize="17sp"/>
+
+        <ImageView
+            android:id="@+id/Rightdelete"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:layout_toEndOf="@+id/Rightcity"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="3dp"/>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/wrong_rel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:visibility="gone"
+        android:padding="2dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/txt_city_bg">
+        <TextView
+            android:id="@+id/Wrongcity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hello"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:textSize="17sp"/>
+
+        <ImageView
+            android:id="@+id/Wrongdelete"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:src="@drawable/ic_baseline_close_24"
+            android:layout_toEndOf="@+id/Wrongcity"
+            android:clickable="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="3dp"/>
+
+    </RelativeLayout>
+
+
+</FrameLayout>

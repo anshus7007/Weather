@@ -1,9 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/home_rl"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    tools:context=".ui.activity.HomeActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:id="@+id/appBarLayout"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBarHome"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColorSecondary="@android:color/white">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Favourites"
+                android:layout_margin="3dp"
+                android:layout_marginTop="20dp"
+                android:textColor="@android:color/white"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/progressBarHome"
+        android:layout_width="100dp"
+        android:visibility="gone"
+        app:lottie_rawRes="@raw/progress_bar"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"/>
+    <RelativeLayout
+        android:id="@+id/rl20"
+        android:layout_below="@+id/appBarLayout"
+        android:layout_marginTop="80dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/no_fav_weather"
+            android:layout_width="300dp"
+            android:layout_margin="30dp"
+            android:layout_marginTop="60dp"
+            app:lottie_rawRes="@raw/weather3"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true"
+            android:layout_height="300dp"
+            android:layout_centerHorizontal="true"/>
+        <TextView
+            android:id="@+id/nothing_added"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nothing added to favourite city"
+            android:gravity="center_horizontal"
+            android:textSize="21sp"
+            android:fontFamily="@font/poppinsmedium"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/no_fav_weather"/>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="100dp"
+            android:checkable="true"
+            android:layout_below="@id/nothing_added"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/teal_200"
+            app:strokeWidth="1dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add one"
+                android:padding="8dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:textColor="@android:color/white"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="18sp">
+
+
+            </TextView>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </RelativeLayout>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    android:layout_below="@id/appBarLayout"
+    android:layout_width="match_parent"
+    android:id="@+id/refresh"
+    android:layout_height="match_parent">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fav_city_recycler"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        />
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</RelativeLayout>
