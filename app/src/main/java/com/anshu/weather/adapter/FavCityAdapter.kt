@@ -3,6 +3,7 @@ package com.anshu.weather.adapter
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.Image
 import android.os.AsyncTask
 import android.provider.Settings
@@ -13,7 +14,10 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -27,8 +31,10 @@ import com.anshu.weather.db.db2_for_fav_city.entity.FavCity
 import com.anshu.weather.fav_city_view_model.FavCityViewModel
 import com.anshu.weather.others.Constants
 import com.anshu.weather.ui.activity.HomeActivity
+import com.anshu.weather.ui.activity.MainActivity
 import com.anshu.weather.ui.activity.WeatherActivity
 import com.anshu.weather.util.ConnectionManager
+import com.google.android.material.card.MaterialCardView
 import org.json.JSONObject
 import java.lang.Exception
 import java.net.URL
@@ -47,9 +53,13 @@ class FavCityAdapter(val context: Context,var size:Int,
 
 
         if(size==0)
-            (context as Activity).findViewById<RelativeLayout>(R.id.rl20).visibility=View.VISIBLE
+            (context as Activity).findViewById<ConstraintLayout>(R.id.rl27).visibility=View.VISIBLE
         else
-            (context as Activity).findViewById<RelativeLayout>(R.id.rl20).visibility=View.GONE
+            (context as Activity).findViewById<ConstraintLayout>(R.id.rl27).visibility=View.GONE
+//        (context as Activity).findViewById<MaterialCardView>(R.id.materialCardView25).setOnClickListener {
+//            (context as Activity).startActivity(Intent(context, MainActivity::class.java))
+//            finishAffinity(context)
+//        }
         notifyDataSetChanged()
         notifyItemRemoved(position)
     }
@@ -67,16 +77,76 @@ class FavCityAdapter(val context: Context,var size:Int,
 
         WeatherTask(currItem.name,context,holder).execute()
         (context as Activity).findViewById<SwipeRefreshLayout>(R.id.refresh).setOnRefreshListener {
-            (context as Activity).findViewById<LottieAnimationView>(R.id.progressBarHome).visibility=View.VISIBLE
-            (context as Activity).findViewById<RecyclerView>(R.id.fav_city_recycler).visibility=View.GONE
-            WeatherTask(currItem.name,context,holder).execute()
+            if (ConnectionManager().checkConnectivity(context!!)) {
+
+                (context as Activity).findViewById<LottieAnimationView>(R.id.progressBarHome).visibility =
+                    View.VISIBLE
+                (context as Activity).findViewById<RecyclerView>(R.id.fav_city_recycler).visibility =
+                    View.GONE
+                WeatherTask(currItem.name, context, holder).execute()
+            }
+            else
+            {
+                val alterDialog =
+                    AlertDialog.Builder(context!!)
+                alterDialog.setTitle("No Internet")
+                alterDialog.setMessage("Internet Connection can't be establish!")
+                alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                    val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                    context.startActivity(settingsIntent)
+                }
+
+                alterDialog.setNegativeButton("Exit") { text, listener ->
+                    finishAffinity(context!!)//closes all the instances of the app and the app closes completely
+                }
+                alterDialog.setCancelable(false)
+                val alert: AlertDialog = alterDialog.create()
+                alert.show()
+                alert.setCanceledOnTouchOutside(true);
+                alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(context!!,R.drawable.dialog_bg))
+
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+            }
+
         }
         holder.itemView.setOnClickListener {
-            val intent = Intent(context, WeatherActivity::class.java)
-            intent.putExtra("city_name", currItem.name)
-            intent.putExtra("from", "fromFav")
+            if (ConnectionManager().checkConnectivity(context!!)) {
 
-            context.startActivity(intent)
+                val intent = Intent(context, WeatherActivity::class.java)
+                intent.putExtra("city_name", currItem.name)
+                intent.putExtra("from", "fromFav")
+
+                context.startActivity(intent)
+            }
+            else
+            {
+                val alterDialog =
+                    AlertDialog.Builder(context!!)
+                alterDialog.setTitle("No Internet")
+                alterDialog.setMessage("Internet Connection can't be establish!")
+                alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                    val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                    context.startActivity(settingsIntent)
+                }
+
+                alterDialog.setNegativeButton("Exit") { text, listener ->
+                    (context as Activity).finishAffinity()//closes all the instances of the app and the app closes completely
+                }
+                alterDialog.setCancelable(false)
+                val alert: AlertDialog = alterDialog.create()
+                alert.show()
+                alert.setCanceledOnTouchOutside(true);
+                alert.setCanceledOnTouchOutside(true);
+                alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(context!!,R.drawable.dialog_bg))
+
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+            }
         }
 
 
@@ -90,6 +160,7 @@ class FavCityAdapter(val context: Context,var size:Int,
         val city: TextView =itemView.findViewById(R.id.fav_city)
         val updatedTime: TextView =itemView.findViewById(R.id.updatedTime)
         val fav_temp: TextView =itemView.findViewById(R.id.fav_temp)
+        val background:RelativeLayout=itemView.findViewById<RelativeLayout>(R.id.single_home)
 
 
     }
@@ -178,6 +249,35 @@ class FavCityAdapter(val context: Context,var size:Int,
                 (context as Activity).findViewById<SwipeRefreshLayout>(R.id.refresh).isRefreshing=false
                 (context as Activity).findViewById<RecyclerView>(R.id.fav_city_recycler).visibility=View.VISIBLE
 //                (context as Activity).findViewById<RelativeLayout>(R.id.single_home).visibility=View.GONE
+                val hrs:Int=SimpleDateFormat("hh", Locale.ENGLISH).format(Date(sunset * 1000)).toInt()
+                val ampm:String=SimpleDateFormat("a", Locale.ENGLISH).format(Date(sunset * 1000))
+                if(description.equals("snow") && hrs>=6&&ampm.equals("PM"))
+                    holder.background.setBackgroundColor(Color.parseColor("#5C6BC0"))
+
+                else if(description.equals("snow") &&ampm.equals("AM"))
+                   holder.background.setBackgroundColor(Color.parseColor("#2196F3"))
+
+                else if(description.contains("rain"))
+                    holder.background.setBackgroundColor(Color.parseColor("#5C6BC0"))
+
+                else if(description.contains("cloud")&&hrs>=6&&hrs<=12&&ampm.equals("PM"))
+                    holder.background.setBackgroundColor(Color.parseColor("#7986CB"))
+
+                else if((description.contains("clouds") &&ampm.equals("AM"))||description==("clear sky"))
+                    holder.background.setBackgroundColor(Color.parseColor("#64B5F6"))
+
+                else if(description.contains("overcast"))
+                    holder.background.setBackgroundColor(Color.parseColor("#78909C"))
+
+                else if(description.contains("fog")||description.contains("haze")||description.contains("smoke"))
+                    holder.background.setBackgroundColor(Color.parseColor("#607D8B"))
+
+                else if(description.contains("mist"))
+                    holder.background.setBackgroundColor(Color.parseColor("#00BFA5"))
+//
+                else
+                    holder.background.setBackgroundColor(Color.parseColor("#FFA726"))
+
 
                 holder.city.text=city
                 holder.updatedTime.text=updatedAtReq

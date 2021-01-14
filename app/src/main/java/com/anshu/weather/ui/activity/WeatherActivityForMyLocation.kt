@@ -1,15 +1,18 @@
 package com.anshu.weather.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.lottie.LottieAnimationView
 import com.anshu.weather.R
@@ -116,6 +119,7 @@ class WeatherActivityForMyLocation : AppCompatActivity() {
             return null
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: String?) {
 
             super.onPostExecute(result)
@@ -178,11 +182,40 @@ class WeatherActivityForMyLocation : AppCompatActivity() {
                         SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise * 1000))
                     findViewById<TextView>(R.id.txtSunset_mine).text =
                         SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
-                    findViewById<TextView>(R.id.txtPressure_mine).text = pressure
-                    findViewById<TextView>(R.id.txtHumidity_mine).text = humidity
-                    findViewById<TextView>(R.id.txtWind_mine).text = windSpeed
-                    findViewById<TextView>(R.id.txtCloudness_mine).text = cloudness.toString()
-
+                    findViewById<TextView>(R.id.txtPressure_mine).text = pressure.toString()+" hPa"
+                    findViewById<TextView>(R.id.txtHumidity_mine).text = humidity.toString()+"%"
+                    findViewById<TextView>(R.id.txtWind_mine).text = windSpeed.toString()+" m/sc"
+                    findViewById<TextView>(R.id.txtCloudness_mine).text = cloudness.toString()+"%"
+                    val hrs:Int=SimpleDateFormat("hh", Locale.ENGLISH).format(Date(sunset * 1000)).toInt()
+                    val ampm:String=SimpleDateFormat("a", Locale.ENGLISH).format(Date(sunset * 1000))
+//                        println("&7777777777777777777777777777777${hrs}${ampm}&%%%%%%%%%%%%%%%%%%%%%%%%")
+                    if(description.equals("snow") && hrs>=6&&ampm.equals("PM"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_snowy_night)
+                    else if(description.equals("snow") &&ampm.equals("AM"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_snowy)
+                    else if(description.contains("rain"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_rain)
+                    else if(description.contains("cloud")&&hrs>=6&&hrs<=12&&ampm.equals("PM"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_cloudy_night)
+                    else if((description.contains("clouds") &&ampm.equals("AM"))||description==("clear sky"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_cloudy)
+                    else if(description.contains("overcast"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_overcast)
+                    else if(description.contains("fog")||description.contains("haze")||description.contains("smoke"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_fog__1_)
+                    else if(description.contains("mist"))
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_mist)
+                    else
+                        findViewById<RelativeLayout>(R.id.relativeLayout_mine).background=
+                            ContextCompat.getDrawable(applicationContext,R.drawable.ic_scattered_clouds)
 
 
                 }

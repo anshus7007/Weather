@@ -1,24 +1,26 @@
 package com.anshu.weather.ui.activity
 
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.provider.Settings
 import android.view.Menu
-import com.anshu.weather.R
-
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.size
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.anshu.weather.R
+//import com.anshu.weather.others.InitApplication
 import com.anshu.weather.ui.fragments.SearchFragment
 import com.anshu.weather.ui.fragments.SettingsFragment
-import com.google.android.gms.location.*
+import com.anshu.weather.util.ConnectionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),SettingsFragment.Listener {
 //    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 //
 //     var lat:Double= 0.0
@@ -31,6 +33,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val intent=intent
+//        val instance=InitApplication()
+//        if (instance.isNightModeEnabled() == true) {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//        } else {
+//            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//        }
         val check=intent.getStringExtra("settings")
         println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
@@ -61,7 +69,9 @@ class MainActivity : AppCompatActivity() {
 ////            btnStartupdate.isEnabled = true
 ////            btnStopUpdates.isEnabled = false
 ////        }
-        fab.setOnClickListener{
+        fab.setOnClickListener {
+            if (ConnectionManager().checkConnectivity(this!!)) {
+
             val i = Intent(this, HomeActivity::class.java)
             overridePendingTransition(
                 android.R.anim.accelerate_decelerate_interpolator,
@@ -69,6 +79,33 @@ class MainActivity : AppCompatActivity() {
             )
             startActivity(i)
         }
+        else
+        {
+            val alterDialog =
+                AlertDialog.Builder(this!!)
+            alterDialog.setTitle("No Internet")
+            alterDialog.setMessage("Internet Connection can't be establish!")
+            alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                startActivity(settingsIntent)
+            }
+
+            alterDialog.setNegativeButton("Exit") { text, listener ->
+                ActivityCompat.finishAffinity(this!!)//closes all the instances of the app and the app closes completely
+            }
+            alterDialog.setCancelable(false)
+            val alert: AlertDialog = alterDialog.create()
+            alert.show()
+            alert.setCanceledOnTouchOutside(true);
+            alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(this!!,R.drawable.dialog_bg))
+
+            alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+            alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+            alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+        }
+
+    }
         bottomNavigationView.background=null
         bottomNavigationView.menu.getItem(1).isEnabled=false
         bottomNavigationView.setOnNavigationItemSelectedListener(navListener)
@@ -105,6 +142,15 @@ class MainActivity : AppCompatActivity() {
             ).commit()
             true
         }
+    override fun onBackPressed() {
+        ActivityCompat.finishAffinity(this!!)//closes all the instances of the app and the app closes completely
+    }
+    override fun onThemeChanged() {
+        val intent = intent
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION)
+        finish()
+        startActivity(intent)
+    }
 //    fun getLastLocation()
 //    {
 //        if(checkPermission())

@@ -2,12 +2,19 @@ package com.anshu.weather.ui.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat.finishAffinity
+import androidx.core.app.ActivityCompat.getDrawable
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,6 +28,7 @@ import com.anshu.weather.db.db1_for_city_name.entity.CityWeather
 import com.anshu.weather.others.Constants
 import com.anshu.weather.repositories.CityRepository
 import com.anshu.weather.ui.activity.WeatherActivity
+import com.anshu.weather.util.ConnectionManager
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
@@ -65,7 +73,35 @@ class SearchFragment : Fragment() {
         searchList.adapter = adapter
 
         txtSearch.setOnClickListener{
-            search(search, viewmodel)
+            if (ConnectionManager().checkConnectivity(activity!!)) {
+                println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+                search(search, viewmodel)
+            }
+            else
+            {
+                val alterDialog =
+                    AlertDialog.Builder(activity!!)
+                alterDialog.setTitle("No Internet")
+                alterDialog.setMessage("Internet Connection can't be establish!")
+                alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                    val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                    startActivity(settingsIntent)
+                }
+
+                alterDialog.setNegativeButton("Exit") { text, listener ->
+                    finishAffinity(activity!!)//closes all the instances of the app and the app closes completely
+                }
+                alterDialog.setCancelable(false)
+                val alert: AlertDialog = alterDialog.create()
+                alert.show()
+                alert.setCanceledOnTouchOutside(true);
+                alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(activity!!,R.drawable.dialog_bg))
+
+                alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+            }
         }
         viewmodel.getAllSearchedCity().observe(activity!!, Observer {
             adapter.items = it
@@ -119,7 +155,9 @@ class SearchFragment : Fragment() {
                 snackbar.show()
             }
         }
+
     }
+
 //    class DBAsyncTask(val context: Context, val restaurantEntity: CityWeather, val mode: Int): AsyncTask<Void, Void, Boolean>() {
 //
 //        val db = Room.databaseBuilder(context, CityDatabase::class.java, "cityDB.db").build()

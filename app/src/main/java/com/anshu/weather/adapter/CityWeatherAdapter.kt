@@ -1,18 +1,26 @@
 package com.anshu.weather.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.provider.Settings
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.startActivity
 
 import androidx.recyclerview.widget.RecyclerView
 import com.anshu.weather.R
 import com.anshu.weather.db.db1_for_city_name.entity.CityWeather
 import com.anshu.weather.city_view_model.CityViewModel
 import com.anshu.weather.ui.activity.WeatherActivity
+import com.anshu.weather.util.ConnectionManager
 
 
 class CityWeatherAdapter(
@@ -86,11 +94,41 @@ class CityWeatherAdapter(
                 holder.wrong_city.text = currItem.name
 
                 holder.wrong_city.setOnClickListener {
-                    val intent = Intent(context, WeatherActivity::class.java)
-                    intent.putExtra("city_name", currItem.name)
-                    intent.putExtra("from", "fromSearch")
+                    if (ConnectionManager().checkConnectivity(context!!)) {
 
-                    context.startActivity(intent)
+                        val intent = Intent(context, WeatherActivity::class.java)
+                        intent.putExtra("city_name", currItem.name)
+                        intent.putExtra("from", "fromSearch")
+
+                        context.startActivity(intent)
+                    }
+                    else
+                    {
+                        val alterDialog =
+                            AlertDialog.Builder(context!!)
+                        alterDialog.setTitle("No Internet")
+                        alterDialog.setMessage("Internet Connection can't be establish!")
+                        alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                            val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                            context.startActivity(settingsIntent)
+                        }
+
+                        alterDialog.setNegativeButton("Exit") { text, listener ->
+                            (context as Activity).finishAffinity()//closes all the instances of the app and the app closes completely
+                        }
+                        alterDialog.setCancelable(false)
+                        val alert: AlertDialog = alterDialog.create()
+                        alert.show()
+                        alert.setCanceledOnTouchOutside(true);
+                        alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(context!!,R.drawable.dialog_bg))
+
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                        alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+                    }
+
+
                 }
                 holder.wrong_delete.setOnClickListener {
 //                val result = DBAsyncTask(context, cityEntity, 2).execute().get()
@@ -115,15 +153,44 @@ class CityWeatherAdapter(
                 holder.right_rel.visibility=View.VISIBLE
                 holder.right_city.text = currItem.name
                 holder.right_city.setOnClickListener {
-                    val intent = Intent(context, WeatherActivity::class.java)
-                    intent.putExtra("city_name", currItem.name)
-                    intent.putExtra("from", "fromSearch")
+                    if (ConnectionManager().checkConnectivity(context!!)) {
 
-                    context.startActivity(intent)
+                        val intent = Intent(context, WeatherActivity::class.java)
+                        intent.putExtra("city_name", currItem.name)
+                        intent.putExtra("from", "fromSearch")
+
+                        context.startActivity(intent)
+                    }
+                    else
+                    {
+                        val alterDialog =
+                            AlertDialog.Builder(context!!)
+                        alterDialog.setTitle("No Internet")
+                        alterDialog.setMessage("Internet Connection can't be establish!")
+                        alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                            val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                            context.startActivity(settingsIntent)
+                        }
+
+                        alterDialog.setNegativeButton("Exit") { text, listener ->
+                            (context as Activity).finishAffinity()//closes all the instances of the app and the app closes completely
+                        }
+                        alterDialog.setCancelable(false)
+                        val alert: AlertDialog = alterDialog.create()
+                        alert.show()
+                        alert.setCanceledOnTouchOutside(true);
+                        alert.setCanceledOnTouchOutside(true);
+                        alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(context!!,R.drawable.dialog_bg))
+
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                        alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+                    }
                 }
                 holder.rightdelete.setOnClickListener {
 //                val result = DBAsyncTask(context, cityEntity, 2).execute().get()
-//
+
 //                if (result) {
                     viewModel.delete(currItem)
 

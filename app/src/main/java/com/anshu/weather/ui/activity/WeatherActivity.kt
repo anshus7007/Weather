@@ -1,15 +1,23 @@
 package com.anshu.weather.ui.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.os.Bundle
 import android.provider.Settings
+import android.util.TypedValue
 import android.view.View
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProviders
 import com.airbnb.lottie.LottieAnimationView
 import com.anshu.weather.R
@@ -42,30 +50,54 @@ class WeatherActivity : AppCompatActivity() {
         setContentView(R.layout.activity_weather)
         val intent = intent
         val city = intent.getStringExtra("city_name")
-        val from:String?=intent.getStringExtra("from")
-        progressBar=findViewById(R.id.progressBar)
-        move_to_search=findViewById(R.id.materialCardView)
-        val database= FavCityDB(this)
-        val repository= FavCityRepository(database)
-        val factory= FavCityViewModelFactory(repository)
-        val viewmodel = ViewModelProviders.of(this,factory).get(FavCityViewModel::class.java)
-        val db= CityDatabase(this!!)
-        val repo= CityRepository(db)
-        val fac= CityViewModelFactory(repo)
+        val from: String? = intent.getStringExtra("from")
+        progressBar = findViewById(R.id.progressBar)
+        move_to_search = findViewById(R.id.materialCardView)
+        val database = FavCityDB(this)
+        val repository = FavCityRepository(database)
+        val factory = FavCityViewModelFactory(repository)
+        val viewmodel = ViewModelProviders.of(this, factory).get(FavCityViewModel::class.java)
+        val db = CityDatabase(this!!)
+        val repo = CityRepository(db)
+        val fac = CityViewModelFactory(repo)
         val viewModel = ViewModelProviders.of(this, fac).get(CityViewModel::class.java)
 
         if (city != null) {
-            progressBar.visibility=View.VISIBLE
-            findViewById<ConstraintLayout>(R.id.constraintLayout).visibility=View.GONE
-            findViewById<RelativeLayout>(R.id.relativeLayout).visibility=View.GONE
+            if (ConnectionManager().checkConnectivity(applicationContext as Context)) {
 
-            WeatherTask(city,viewmodel,viewModel,from!!).execute()
+                progressBar.visibility = View.VISIBLE
+                findViewById<ConstraintLayout>(R.id.constraintLayout).visibility = View.GONE
+                findViewById<RelativeLayout>(R.id.relativeLayout).visibility = View.GONE
+
+                WeatherTask(city, viewmodel, viewModel, from!!).execute()
+            }
+         else {
+            val alterDialog =
+                AlertDialog.Builder(this)
+            alterDialog.setTitle("No Internet")
+            alterDialog.setMessage("Internet Connection can't be establish!")
+            alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                startActivity(settingsIntent)
+            }
+
+            alterDialog.setNegativeButton("Exit") { text, listener ->
+                finishAffinity()//closes all the instances of the app and the app closes completely
+            }
+            alterDialog.setCancelable(false)
+            val alert: AlertDialog = alterDialog.create()
+            alert.show()
+            alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+            alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
         }
-        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-        move_to_search.setOnClickListener {
-            startActivity(Intent(this,MainActivity::class.java))
-            finish()
-        }
+    }
+
+            getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
+            move_to_search.setOnClickListener {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+
 
 
     }
@@ -84,22 +116,24 @@ class WeatherActivity : AppCompatActivity() {
             var response: String?
 
             var APPID = "e55a6c82e17579c3f5a238e30a32977f"
+            println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%Anshu%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+
             if (ConnectionManager().checkConnectivity(applicationContext as Context)) {
 
                 try {
 
                     response =
-                            URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$APPID").readText(
-                                    Charsets.UTF_8
-                            )
+                        URL("https://api.openweathermap.org/data/2.5/weather?q=$city&units=metric&appid=$APPID").readText(
+                            Charsets.UTF_8
+                        )
                 } catch (e: Exception) {
                     response = null
                 }
                 return response
 
-            }
-            else {
-                val alterDialog = androidx.appcompat.app.AlertDialog.Builder(applicationContext as Context)
+            } else {
+                val alterDialog =
+                    androidx.appcompat.app.AlertDialog.Builder(applicationContext as Context)
                 alterDialog.setTitle("No Internet")
                 alterDialog.setMessage("Internet Connection can't be establish!")
                 alterDialog.setPositiveButton("Open Settings") { text, listener ->
@@ -118,35 +152,38 @@ class WeatherActivity : AppCompatActivity() {
             return null
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: String?) {
 
             super.onPostExecute(result)
-            findViewById<LottieAnimationView>(R.id.progressBar).visibility=View.GONE
+            if (ConnectionManager().checkConnectivity(applicationContext as Context)) {
+
+                findViewById<LottieAnimationView>(R.id.progressBar).visibility = View.GONE
 
                 try {
-                    if(result==null)
-                    {
-                        viewModelsss.getAllSearchedCity().observe(this@WeatherActivity, androidx.lifecycle.Observer {
+                    if (result == null) {
+                        viewModelsss.getAllSearchedCity()
+                            .observe(this@WeatherActivity, androidx.lifecycle.Observer {
 
-                            var check = ArrayList<CityWeather>()
-                            var cityName = ArrayList<String>()
-                            for (i in it) {
-                                check.add(i)
-                                cityName.add(i.name)
-                            }
-                            if (!cityName.contains(city)) {
-                                viewModelsss.insert(CityWeather(city, false))
-                                Constants.cityList.add(city)
+                                var check = ArrayList<CityWeather>()
+                                var cityName = ArrayList<String>()
+                                for (i in it) {
+                                    check.add(i)
+                                    cityName.add(i.name)
+                                }
+                                if (!cityName.contains(city)) {
+                                    viewModelsss.insert(CityWeather(city, false))
+                                    Constants.cityList.add(city)
 
-                            }
-                        })
-                            findViewById<ConstraintLayout>(R.id.constraintLayout).visibility = View.VISIBLE
-                            findViewById<RelativeLayout>(R.id.relativeLayout).visibility = View.GONE
+                                }
+                            })
+                        findViewById<ConstraintLayout>(R.id.constraintLayout).visibility =
+                            View.VISIBLE
+                        findViewById<RelativeLayout>(R.id.relativeLayout).visibility = View.GONE
 
 
-                    }
-                    else {
-                        if(!from.equals("fromFav")) {
+                    } else {
+                        if (!from.equals("fromFav")) {
                             viewModelsss.getAllSearchedCity()
                                 .observe(this@WeatherActivity, androidx.lifecycle.Observer {
 
@@ -166,28 +203,32 @@ class WeatherActivity : AppCompatActivity() {
                                 })
                         }
 
-                        findViewById<ConstraintLayout>(R.id.constraintLayout).visibility=View.GONE
-                        findViewById<RelativeLayout>(R.id.relativeLayout).visibility=View.VISIBLE
+                        findViewById<ConstraintLayout>(R.id.constraintLayout).visibility = View.GONE
+                        findViewById<RelativeLayout>(R.id.relativeLayout).visibility = View.VISIBLE
 
                         val jsonObj = JSONObject(result)
 
 
                         val main = jsonObj.getJSONObject("main")
-                        val id=jsonObj.getInt("id")
+                        val id = jsonObj.getInt("id")
                         val sys = jsonObj.getJSONObject("sys")
                         val wind = jsonObj.getJSONObject("wind")
-                        val clouds=jsonObj.getJSONObject("clouds")
-                        val cloudness=clouds.getString("all")
+                        val clouds = jsonObj.getJSONObject("clouds")
+                        val cloudness = clouds.getString("all")
                         val weather = jsonObj.getJSONArray("weather").getJSONObject(0)
                         val updatedAt = jsonObj.getLong("dt")
 
 
                         val updatedAtText =
-                                "Updated at: " + SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.ENGLISH).format(
-                                        Date(updatedAt * 1000)
-                                )
-                        val updatedAtReq=SimpleDateFormat(" hh:mm a", Locale.ENGLISH).format(
-                                Date(updatedAt * 1000))
+                            "Updated at: " + SimpleDateFormat(
+                                "dd/MM/yyyy hh:mm a",
+                                Locale.ENGLISH
+                            ).format(
+                                Date(updatedAt * 1000)
+                            )
+                        val updatedAtReq = SimpleDateFormat(" hh:mm a", Locale.ENGLISH).format(
+                            Date(updatedAt * 1000)
+                        )
                         val temp = main.getString("temp")
                         val tempMin = main.getString("temp_min")
                         val tempMax = main.getString("temp_max")
@@ -209,22 +250,72 @@ class WeatherActivity : AppCompatActivity() {
                             SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunrise * 1000))
                         findViewById<TextView>(R.id.txtSunset).text =
                             SimpleDateFormat("hh:mm a", Locale.ENGLISH).format(Date(sunset * 1000))
-                        findViewById<TextView>(R.id.txtPressure).text = pressure
-                        findViewById<TextView>(R.id.txtHumidity).text = humidity
-                        findViewById<TextView>(R.id.txtWind).text = windSpeed
-                        findViewById<TextView>(R.id.txtCloudness).text = cloudness.toString()
-                        findViewById<TextView>(R.id.city_name).text = address
-                        findViewById<TextView>(R.id.city_name).text = address
-                        val favCityEntity = FavCity(id,address, updatedAtReq, temp)
-                        if(from.equals("fromSearch"))
+
+                        findViewById<TextView>(R.id.txtPressure).text = pressure.toString() + "hPa"
+                        findViewById<TextView>(R.id.txtHumidity).text = humidity + "%"
+                        findViewById<TextView>(R.id.txtWind).text = windSpeed + "m/sc"
+                        findViewById<TextView>(R.id.txtCloudness).text = cloudness.toString() + "%"
+                        val hrs: Int =
+                            SimpleDateFormat("hh", Locale.ENGLISH).format(Date(sunset * 1000))
+                                .toInt()
+                        val ampm: String =
+                            SimpleDateFormat("a", Locale.ENGLISH).format(Date(sunset * 1000))
+//                        println("&7777777777777777777777777777777${hrs}${ampm}&%%%%%%%%%%%%%%%%%%%%%%%%")
+                        if (description.equals("snow") && hrs >= 6 && ampm.equals("PM"))
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.drawable.ic_snowy_night
+                                )
+                        else if (description.equals("snow") && ampm.equals("AM"))
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(applicationContext, R.drawable.ic_snowy)
+                        else if (description.contains("rain"))
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(applicationContext, R.drawable.ic_rain)
+                        else if (description.contains("cloud") && hrs >= 6 && hrs <= 12 && ampm.equals(
+                                "PM"
+                            )
+                        )
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.drawable.ic_cloudy_night
+                                )
+                        else if ((description.contains("clouds") && ampm.equals("AM")) || description == ("clear sky"))
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(applicationContext, R.drawable.ic_cloudy)
+                        else if (description.contains("overcast"))
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.drawable.ic_overcast
+                                )
+                        else if (description.contains("fog") || description.contains("haze") || description.contains(
+                                "smoke"
+                            )
+                        )
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(applicationContext, R.drawable.ic_fog__1_)
+                        else if (description.contains("mist"))
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(applicationContext, R.drawable.ic_mist)
+                        else
+                            findViewById<ImageView>(R.id.card_view_theme).background =
+                                ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.drawable.ic_scattered_clouds
+                                )
+
+                        val favCityEntity = FavCity(id, address, updatedAtReq, temp)
+                        if (from.equals("fromSearch"))
                             findViewById<TextView>(R.id.Cancel).setOnClickListener {
-                                val intent=Intent(this@WeatherActivity,MainActivity::class.java)
+                                val intent = Intent(this@WeatherActivity, MainActivity::class.java)
                                 startActivity(intent)
                                 finish()
                             }
 
-                        if(from.equals("fromFav"))
-                        {
+                        if (from.equals("fromFav")) {
                             findViewById<TextView>(R.id.Cancel).setOnClickListener {
 
                                 startActivity(
@@ -236,44 +327,63 @@ class WeatherActivity : AppCompatActivity() {
                                 finish()
                             }
                         }
-                        viewModel.getAllFavCity().observe(this@WeatherActivity, androidx.lifecycle.Observer {
+                        viewModel.getAllFavCity()
+                            .observe(this@WeatherActivity, androidx.lifecycle.Observer {
 
-                            var check= ArrayList<FavCity>()
-                            var cityName= ArrayList<String>()
-                            for(i in it) {
-                                check.add(i)
-                                cityName.add(i.name)
-                            }
-                            if (!cityName.contains(address)) {
+                                var check = ArrayList<FavCity>()
+                                var cityName = ArrayList<String>()
+                                for (i in it) {
+                                    check.add(i)
+                                    cityName.add(i.name)
+                                }
+                                if (!cityName.contains(address)) {
 
-                                findViewById<TextView>(R.id.add).visibility = View.VISIBLE
-                                findViewById<TextView>(R.id.add).setOnClickListener {
-                                    viewModel.insert(favCityEntity)
-                                    Constants.favCityList.add(address)
-                                    val intent = Intent(applicationContext, HomeActivity::class.java)
-                                    startActivity(intent)
+                                    findViewById<TextView>(R.id.add).visibility = View.VISIBLE
+                                    findViewById<TextView>(R.id.add).setOnClickListener {
+                                        viewModel.insert(favCityEntity)
+                                        Constants.favCityList.add(address)
+                                        val intent =
+                                            Intent(applicationContext, HomeActivity::class.java)
+                                        startActivity(intent)
 
-                                    finish()
+                                        finish()
 
+
+                                    }
+
+                                } else {
+                                    findViewById<TextView>(R.id.add).visibility = View.GONE
 
                                 }
-
-                            } else {
-                                findViewById<TextView>(R.id.add).visibility = View.GONE
-
-                            }
-                        })
+                            })
 
                     }
 
                 } catch (e: Exception) {
 
                 }
+            } else {
+                val alterDialog =
+                    androidx.appcompat.app.AlertDialog.Builder(applicationContext as Context)
+                alterDialog.setTitle("No Internet")
+                alterDialog.setMessage("Internet Connection can't be establish!")
+                alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                    val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                    startActivity(settingsIntent)
+                }
+
+                alterDialog.setNegativeButton("Exit") { text, listener ->
+                    finishAffinity()//closes all the instances of the app and the app closes completely
+                }
+                alterDialog.setCancelable(false)
+
+                alterDialog.create()
+                alterDialog.show()
             }
 
 
-
         }
+    }
 
         override fun onResume() {
 

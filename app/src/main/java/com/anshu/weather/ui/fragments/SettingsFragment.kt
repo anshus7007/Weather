@@ -1,9 +1,9 @@
 package com.anshu.weather.ui.fragments
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.location.Geocoder
@@ -12,20 +12,24 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import com.anshu.weather.R
-
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CompoundButton
 import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.anshu.weather.BuildConfig
+import com.anshu.weather.R
+import com.anshu.weather.ui.activity.CustomDialogFragment
+import com.anshu.weather.ui.activity.MainActivity
 import com.anshu.weather.ui.activity.WeatherActivityForMyLocation
+import com.anshu.weather.util.ConnectionManager
 import com.google.android.gms.location.*
 import java.util.*
 
@@ -34,7 +38,8 @@ class SettingsFragment : Fragment() {
     lateinit var location:RelativeLayout
     lateinit var dark_mode: Switch
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
+    private val listener: Listener? = null
+//internal lateinit var prefs:InitApplication
     var lat:Double= 0.0
     var lon:Double=0.0
      var city:String=""
@@ -48,62 +53,72 @@ class SettingsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view= inflater.inflate(R.layout.fragment_settings, container, false)
+//        prefs=InitApplication(activity!!)
+
         location=view.findViewById(R.id.rl1_settings)
         dark_mode=view.findViewById(R.id.dark_mode_switch)
         weather_channel=view.findViewById(R.id.rl5_settings)
         rate_us=view.findViewById(R.id.rl3_settings)
         share=view.findViewById(R.id.rl4_settings)
-
+//        val instance=InitApplication()
+//        if (instance.isNightModeEnabled()) {
+//            dark_mode.setChecked(true)
+//        }
+//        dark_mode.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView: CompoundButton?, isChecked: Boolean ->
+//            instance.setIsNightModeEnabled(isChecked)
+//            listener?.onThemeChanged()
+//        })
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(activity!!)
 //
 //        findViewById<RelativeLayout>(R.id.rl1_settings).setOnClickListener {
         location.setOnClickListener {
 
-            val locationManager = activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-            if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                buildAlertMessageNoGps()
+
+                val locationManager =
+                    activity!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps()
+                } else {
+                    if (ConnectionManager().checkConnectivity(activity!!)) {
+
+                        city = getLastLocation()
+                    }
+                    else
+                    {
+                        val alterDialog =
+                            AlertDialog.Builder(activity!!)
+                        alterDialog.setTitle("No Internet")
+                        alterDialog.setMessage("Internet Connection can't be establish!")
+                        alterDialog.setPositiveButton("Open Settings") { text, listener ->
+                            val settingsIntent = Intent(Settings.ACTION_SETTINGS)//open wifi settings
+                            startActivity(settingsIntent)
+                        }
+
+                        alterDialog.setNegativeButton("Exit") { text, listener ->
+                            ActivityCompat.finishAffinity(activity!!)//closes all the instances of the app and the app closes completely
+                        }
+                        alterDialog.setCancelable(false)
+                        val alert: AlertDialog = alterDialog.create()
+                        alert.show()
+                        alert.setCanceledOnTouchOutside(true);
+                        alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(activity!!,R.drawable.dialog_bg))
+
+                        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+                        alert.getButton(AlertDialog.BUTTON_NEUTRAL).setBackgroundColor(Color.parseColor("#2D3650"))
+
+                    }
+
+
+                }
             }
-            else {
-                city=getLastLocation()
 
 
-            }
-
-        }
         rate_us.setOnClickListener {
-            val builder=AlertDialog.Builder(activity!!)
-                builder.setPositiveButtonText("Submit")
-                .setNegativeButtonText("Cancel")
-                .setNeutralButtonText("Later")
-                .setNoteDescriptions(
-                    Arrays.asList(
-                        "Very Bad",
-                        "Not good",
-                        "Quite ok",
-                        "Very Good",
-                        "Excellent !!!"
-                    )
-                )
-                .setDefaultRating(2)
-                .setTitle("Rate this application")
-                .setDescription("Please select some stars and give your feedback")
-                .setCommentInputEnabled(true)
-                .setDefaultComment("This app is pretty cool !")
-                .setStarColor(Color.RED)
-                .setNoteDescriptionTextColor(Color.GREEN)
-                .setTitleTextColor(Color.BLACK)
-                .setDescriptionTextColor(Color.BLACK)
-                .setHint("Please write your comment here ...")
-                .setHintTextColor(Color.BLACK)
-                .setCommentTextColor(Color.BLACK)
-                .setCommentBackgroundColor(Color.BLACK)
-                .setWindowAnimation(Color.BLACK)
-                .setCancelable(false)
-                .setCanceledOnTouchOutside(false)
-                .create(this@SettingsFragment)
-                .setTargetFragment(this, TAG) // only if listener is implemented by fragment
-                .show()
+            var dialog=CustomDialogFragment()
+            dialog.show(childFragmentManager, "Custom")
         }
+
 
         weather_channel.setOnClickListener {
             val uri: Uri = Uri.parse("https://weather.com/en-IN/weather/today/l/INXX0096:1:IN?par=apple_widget&units=m")
@@ -115,6 +130,9 @@ class SettingsFragment : Fragment() {
             shareApp()
         }
         return view
+    }
+    internal interface Listener {
+        fun onThemeChanged()
     }
     fun shareApp()
     {
@@ -151,7 +169,10 @@ class SettingsFragment : Fragment() {
                         val intent = Intent(context, WeatherActivityForMyLocation::class.java)
                         intent.putExtra("city_name", cityName)
 //                intent.putExtra("from", "fromSearch")
-
+//                        activity!!.overridePendingTransition(
+//                            android.R.anim.slide_out_right,
+//                            android.R.anim.slide_in_left
+//                        )
                         activity!!.startActivity(intent)
                     }
 
@@ -269,7 +290,6 @@ class SettingsFragment : Fragment() {
         var geoCoder= Geocoder(activity!!, Locale.getDefault())
         var address=geoCoder.getFromLocation(lat, lon, 1)
         cityName= address.get(0).locality
-        Toast.makeText(activity, "^^^^^^^^^^^^^^$cityName^^^^^^^^^^^^^^^", Toast.LENGTH_LONG).show()
         city=cityName
         return cityName
     }
@@ -279,7 +299,9 @@ class SettingsFragment : Fragment() {
         val builder = AlertDialog.Builder(activity!!)
         builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
             .setCancelable(false)
+
             .setPositiveButton("Yes") { dialog, id ->
+
                 startActivityForResult(
                     Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 11
                 )
@@ -289,6 +311,12 @@ class SettingsFragment : Fragment() {
             }
         val alert: AlertDialog = builder.create()
         alert.show()
+        alert.setCanceledOnTouchOutside(true);
+        alert.getWindow()?.setBackgroundDrawable(ContextCompat.getDrawable(activity!!,R.drawable.dialog_bg))
+
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#FFFFFF"))
+        alert.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#FFFFFF"))
+
 
 
     }

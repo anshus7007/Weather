@@ -72,7 +72,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppinsmedium"
-            android:text="It appears that you searched for the wrong city. Try again"
+            android:text="Unable to fetch your location."
             android:textAlignment="center"
             android:textColor="@android:color/white"
             android:textSize="18sp"
@@ -114,7 +114,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Search"
+                android:text="Try again later"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:padding="8dp"
@@ -174,6 +174,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout_mine"
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="match_parent">
 
         <TextView
@@ -203,8 +204,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Delhi"
-            android:textSize="45sp"
-            android:fontFamily="@font/codec_cold_trial"
+            android:textSize="35sp"
+            android:textColor="@android:color/white"
+
             android:gravity="center"
             android:layout_marginTop="50dp"/>
         <TextView
@@ -212,8 +214,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Haze"
+
+            android:textColor="@android:color/white"
+
             android:layout_below="@+id/city_name_mine"
-            android:textSize="25sp"
+            android:textSize="21sp"
             android:gravity="center"
             />
         <RelativeLayout
@@ -227,6 +232,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="19"
+                android:textColor="@android:color/white"
+
                 android:textSize="70sp"
                 style="@style/ShapeAppearanceOverlay.MaterialComponents.MaterialCalendar.Day"
                 />
@@ -244,13 +251,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColor="@android:color/white"
+
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="H: "
-                android:textSize="25sp"/>
+                android:textColor="@android:color/white"
+
+                android:textSize="21sp"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -260,7 +271,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/_19"
-                    android:textSize="25sp"
+                    android:textColor="@android:color/white"
+
+                    android:textSize="21sp"
                     style="@style/ShapeAppearanceOverlay.MaterialComponents.MaterialCalendar.Day"
                     />
                 <ImageView
@@ -276,6 +289,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="   "
+                android:textColor="@android:color/white"
+
                 android:textSize="25sp"/>
 
 
@@ -283,10 +298,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="L: "
-                android:textSize="25sp"/>
+                android:textColor="@android:color/white"
+
+                android:textSize="21sp"/>
 
 
             <RelativeLayout
+                android:id="@+id/highLow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
@@ -294,7 +312,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/_7"
-                    android:textSize="25sp"
+                    android:textColor="@android:color/white"
+                    android:textSize="21sp"
                     style="@style/ShapeAppearanceOverlay.MaterialComponents.MaterialCalendar.Day"
                     />
                 <ImageView
@@ -306,300 +325,229 @@
             </RelativeLayout>
 
 
+
+
         </LinearLayout>
-        <LinearLayout
-            android:layout_marginBottom="30dp"
-            android:layout_alignParentBottom="true"
+
+        <View
+
+            android:id="@+id/line100"
+            android:layout_marginTop="40dp"
+            android:layout_below="@+id/ll1"
             android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@android:color/white"/>
+        <LinearLayout
+            android:id="@+id/sun_ka_seen"
+            android:layout_below="@id/line100"
+            android:layout_width="match_parent"
+            android:padding="10dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
+            android:orientation="horizontal"
+            android:weightSum="2">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1">
 
-                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/pressure"
-                    android:layout_width="120dp"
-                    android:background="@drawable/card_view"
-                    card_view:cardElevation="4dp"
-                    card_view:cardCornerRadius="5dp"
-                    android:layout_height="130dp"
+                    android:layout_height="wrap_content"
+                    android:text="SUNRISE"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"/>
+                <TextView
+                    android:id="@+id/txtSunrise_mine"
+                    android:layout_width="wrap_content"
 
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/pressure">
-
-
-                        </ImageView>
-                        <TextView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Pressure"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:layout_gravity="center"/>
-                        <TextView
-                            android:id="@+id/txtPressure_mine"
-                            android:layout_marginTop="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1014 hPa"
-                            android:textSize="15sp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/humidity"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/card_view"
-                    card_view:cardElevation="4dp"
-                    card_view:cardCornerRadius="5dp"
-                    android:layout_width="120dp"
-                    android:layout_height="130dp"
-
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/humidity">
-
-
-                        </ImageView>
-                        <TextView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Humidity"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:layout_gravity="center"/>
-                        <TextView
-                            android:id="@+id/txtHumidity_mine"
-
-                            android:layout_marginTop="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1014 hPa"
-                            android:textSize="15sp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/wind"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/card_view"
-                    card_view:cardElevation="4dp"
-
-                    card_view:cardCornerRadius="5dp"
-                    android:layout_width="120dp"
-                    android:layout_height="130dp"
-
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/wind">
-
-
-                        </ImageView>
-                        <TextView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Wind"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:layout_gravity="center"/>
-                        <TextView
-                            android:id="@+id/txtWind_mine"
-
-                            android:layout_marginTop="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1014 hPa"
-                            android:textSize="15sp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-
+                    android:layout_height="wrap_content"
+                    android:text="6:56"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1">
 
-                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cloudness_mine"
-                    android:layout_width="120dp"
-                    android:background="@drawable/card_view"
-                    card_view:cardElevation="4dp"
-                    card_view:cardCornerRadius="5dp"
-                    android:layout_height="130dp"
+                    android:layout_height="wrap_content"
+                    android:text="SUNSET"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/txtSunset_mine"
 
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="46dp"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="10dp"
-                            android:src="@drawable/clouds">
-
-
-                        </ImageView>
-                        <TextView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Cloudness"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:layout_gravity="center"/>
-                        <TextView
-                            android:id="@+id/txtCloudness_mine"
-
-                            android:layout_marginTop="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1014 hPa"
-                            android:textSize="15sp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sunrise_mine"
-                    android:background="@drawable/card_view"
-                    card_view:cardElevation="4dp"
-                    card_view:cardCornerRadius="5dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="120dp"
-                    android:layout_height="130dp"
-
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/sunrise">
-
-
-                        </ImageView>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginTop="10dp"
-                            android:text="Sunrise"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:id="@+id/txtSunrise_mine"
-
-                            android:layout_marginTop="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1014 hPa"
-                            android:textSize="15sp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/sunset"
-                    android:layout_marginStart="10dp"
-                    android:layout_width="120dp"
-                    android:background="@drawable/card_view"
-                    card_view:cardElevation="4dp"
-                    card_view:cardCornerRadius="5dp"
-                    android:layout_height="130dp"
-
-                    >
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <ImageView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="70dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center_horizontal"
-                            android:src="@drawable/ocean">
-
-
-                        </ImageView>
-                        <TextView
-                            android:layout_marginTop="10dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Sunset"
-                            android:textStyle="bold"
-                            android:textSize="20sp"
-                            android:layout_gravity="center"/>
-                        <TextView
-                            android:id="@+id/txtSunset_mine"
-                            android:layout_marginTop="5dp"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="1014 hPa"
-                            android:textSize="15sp"
-                            android:layout_gravity="center"/>
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-
+                    android:layout_height="wrap_content"
+                    android:text="6:56"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
 
             </LinearLayout>
+
+
 
         </LinearLayout>
+        <View
 
+            android:id="@+id/line101"
 
+            android:layout_below="@+id/sun_ka_seen"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@android:color/white"/>
+        <LinearLayout
+            android:id="@+id/humidity_ka_seen"
+            android:layout_below="@id/line101"
+            android:layout_width="match_parent"
+            android:padding="10dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1">
 
+                <TextView
+                    android:layout_width="wrap_content"
 
-    </RelativeLayout>
+                    android:layout_height="wrap_content"
+                    android:text="WIND"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/txtWind_mine"
 
+                    android:layout_height="wrap_content"
+                    android:text="6:56"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="CLOUDNESS"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/white"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:id="@+id/txtCloudness_mine"
+
+                    android:layout_height="wrap_content"
+                    android:text="6:56"
+                    android:textSize="23sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+            <View
+
+                android:id="@+id/line102"
+
+                android:layout_below="@+id/humidity_ka_seen"
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:background="@android:color/white"/>
+            <LinearLayout
+                android:id="@+id/wind_ka_seen"
+                android:layout_below="@id/line102"
+                android:layout_width="match_parent"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:text="PRESSURE"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/white"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/txtPressure_mine"
+
+                        android:layout_height="wrap_content"
+                        android:text="6:56"
+                        android:textSize="23sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_weight="1">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:text="HUMIDITY"
+                        android:textSize="15sp"
+                        android:textColor="@android:color/white"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:id="@+id/txtHumidity_mine"
+
+                        android:layout_height="wrap_content"
+                        android:text="6:56"
+                        android:textSize="23sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
+        </LinearLayout>
+        <View
+
+            android:id="@+id/line103"
+
+            android:layout_below="@+id/wind_ka_seen"
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:background="@android:color/white"/>
+
+</RelativeLayout>
 </RelativeLayout>

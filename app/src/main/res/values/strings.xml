@@ -11,5 +11,6 @@
     <string name="add"><u>Add</u></string>
     <string name="preference_file">Weather Preferences</string>
     <string name="cancel"><u>Cancel</u></string>
+    <string name="haze">Haze</string>
 
 </resources>

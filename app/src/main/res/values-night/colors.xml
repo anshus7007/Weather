@@ -9,12 +9,11 @@
     <color name="white">#FFFFFFFF</color>
     <color name="fab">#00e5ff</color>
     <color name="card_view">#90caf9</color>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#000000</color>
-    <color name="colorBackground">#000000</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryDark">#FFFFFF</color>
+    <color name="colorAccent">#FFFFFF</color>
+    <color name="colorBackground">#FFFFFF</color>
 
-    <color name="et_search">#616161
+    <color name="et_search">#000000
     </color>
-
 </resources>
