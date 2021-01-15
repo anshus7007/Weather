@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Color
 import android.location.Geocoder
 import android.location.LocationManager
@@ -21,11 +22,13 @@ import android.widget.RelativeLayout
 import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.anshu.weather.BuildConfig
 import com.anshu.weather.R
+import com.anshu.weather.others.SaveData
 import com.anshu.weather.ui.activity.CustomDialogFragment
 import com.anshu.weather.ui.activity.MainActivity
 import com.anshu.weather.ui.activity.WeatherActivityForMyLocation
@@ -36,7 +39,7 @@ import java.util.*
 
 class SettingsFragment : Fragment() {
     lateinit var location:RelativeLayout
-    lateinit var dark_mode: Switch
+//    lateinit var dark_mode: Switch
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private val listener: Listener? = null
 //internal lateinit var prefs:InitApplication
@@ -48,15 +51,21 @@ class SettingsFragment : Fragment() {
     lateinit var weather_channel:RelativeLayout
     lateinit var rate_us:RelativeLayout
     lateinit var share:RelativeLayout
+    lateinit var saveData: SaveData
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view= inflater.inflate(R.layout.fragment_settings, container, false)
 //        prefs=InitApplication(activity!!)
+//saveData= SaveData(activity!!)
+//        if(saveData.loaddarkModeState()==true)
+//            activity!!.setTheme(R.style.darkTheme)
+//        else
+//            activity!!.setTheme(R.style.Theme_Weather)
 
         location=view.findViewById(R.id.rl1_settings)
-        dark_mode=view.findViewById(R.id.dark_mode_switch)
+//        dark_mode=view.findViewById(R.id.dark_mode_switch)
         weather_channel=view.findViewById(R.id.rl5_settings)
         rate_us=view.findViewById(R.id.rl3_settings)
         share=view.findViewById(R.id.rl4_settings)
@@ -69,7 +78,20 @@ class SettingsFragment : Fragment() {
 //            listener?.onThemeChanged()
 //        })
         fusedLocationProviderClient= LocationServices.getFusedLocationProviderClient(activity!!)
+//        if(saveData.loaddarkModeState()==true)
+//            dark_mode.isChecked=true
+//        dark_mode.setOnCheckedChangeListener { _, isChecked ->
 //
+//            // if the button is checked, i.e., towards the right or enabled
+//            // enable dark mode, change the text to disable dark mode
+//            // else keep the switch text to enable dark mode
+//            if (isChecked) {
+//                saveData.setDarkModeState(true)
+//                restartApp()
+//            } else {
+//                saveData.setDarkModeState(false)
+//                restartApp()            }
+//        }
 //        findViewById<RelativeLayout>(R.id.rl1_settings).setOnClickListener {
         location.setOnClickListener {
 
@@ -131,6 +153,11 @@ class SettingsFragment : Fragment() {
         }
         return view
     }
+    fun restartApp()
+    {
+        startActivity(Intent(activity,MainActivity::class.java))
+        activity!!.finish()
+    }
     internal interface Listener {
         fun onThemeChanged()
     }
@@ -140,8 +167,8 @@ class SettingsFragment : Fragment() {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name")
-            var shareMessage = "Download Weather App on Playstore:\n"
-//            shareMessage = shareMessage + shareLink
+            var shareMessage = "Download Weather App:\n"
+            shareMessage = shareMessage + "https://drive.google.com/file/d/11EFV098qYpqrXkEZlaOHmVHw73bnUqQG/view?usp=sharing"
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "Share app: "))
         } catch (e: Exception) {

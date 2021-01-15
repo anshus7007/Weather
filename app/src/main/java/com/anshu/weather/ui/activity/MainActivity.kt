@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.anshu.weather.R
+import com.anshu.weather.others.SaveData
 //import com.anshu.weather.others.InitApplication
 import com.anshu.weather.ui.fragments.SearchFragment
 import com.anshu.weather.ui.fragments.SettingsFragment
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity(),SettingsFragment.Listener {
 //
 //    internal lateinit var mLocationRequest: LocationRequest
 //    var PERMISSION_ID=52
+lateinit var saveData: SaveData
+
     lateinit var fab:FloatingActionButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,11 @@ class MainActivity : AppCompatActivity(),SettingsFragment.Listener {
 //        } else {
 //            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 //        }
+        saveData= SaveData(this!!)
+        if(saveData.loaddarkModeState()==true)
+            setTheme(R.style.darkTheme)
+        else
+            setTheme(R.style.Theme_Weather)
         val check=intent.getStringExtra("settings")
         println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!$check!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 

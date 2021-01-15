@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="al">
+
+<!--        <attr name="backgroundColor" format="color"/>-->
+        <attr name="cardBackgroundColor" format="color"/>
+        <attr name="textColor" format="color"/>
+
+            <attr name="itemBackgroundColor" format="color"/>
+        <attr name="buttonColor" format="color"/>
+        <attr name="searchBg" format="color"/>
+        <attr name="searchRecycler" format="color"/>
+        <attr name="view_divider" format="color"/>
+        <attr name="colorPrimary" format="color"/>
+        <attr name="colorPrimaryDark" format="color"/>
+        <attr name="colorAccent" format="color"/>
+
+        <attr name="android:windowBackground" format="color"/>
+
+    </declare-styleable>
+</resources>

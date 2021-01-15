@@ -110,55 +110,56 @@
                     android:background="@android:color/darker_gray"/>
 
 
-                <RelativeLayout
-                    android:id="@+id/rl2"
-                    android:layout_below="@id/line1"
-                    android:layout_marginStart="10dp"
+<!--                <RelativeLayout-->
+<!--                    android:id="@+id/rl2"-->
+<!--                    android:layout_below="@id/line1"-->
+<!--                    android:layout_marginStart="10dp"-->
 
-                    android:layout_width="match_parent"
-                    android:layout_margin="2dp"
-                    android:layout_height="40dp">
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_margin="2dp"-->
+<!--                    android:layout_height="40dp">-->
 
-                    <RelativeLayout
-                        android:id="@+id/dark_mode"
-                        android:layout_centerVertical="true"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:background="@drawable/dark_mode_bg"
-                        >
+<!--                    <RelativeLayout-->
+<!--                        android:id="@+id/dark_mode"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:background="@drawable/dark_mode_bg"-->
+<!--                        >-->
 
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerInParent="true"
-                            android:src="@drawable/moon" />
+<!--                        <ImageView-->
+<!--                            android:layout_width="22dp"-->
+<!--                            android:layout_height="22dp"-->
+<!--                            android:layout_centerHorizontal="true"-->
+<!--                            android:layout_centerInParent="true"-->
+<!--                            android:src="@drawable/moon" />-->
 
-                    </RelativeLayout>
-                    <TextView
-                        android:id="@+id/txtDarkMode"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Dark Mode"
-                        android:layout_marginStart="15dp"
-                        android:textSize="19sp"
-                        android:layout_centerVertical="true"
+<!--                    </RelativeLayout>-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/txtDarkMode"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Dark Mode"-->
+<!--                        android:layout_marginStart="15dp"-->
+<!--                        android:textSize="19sp"-->
+<!--                        android:layout_centerVertical="true"-->
 
-                        android:layout_toRightOf="@id/dark_mode"
-                        />
+<!--                        android:layout_toRightOf="@id/dark_mode"-->
+<!--                        />-->
 
-                    <Switch
-                        android:id="@+id/dark_mode_switch"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_toEndOf="@+id/txtDarkMode"
-                        android:textColor="#64dd17"
-                        android:layout_centerVertical="true"
-                        android:layout_centerInParent="true"
-                        android:layout_alignParentEnd="true"
-                        tools:ignore="UseSwitchCompatOrMaterialXml" />
+<!--                    <Switch-->
+<!--                        android:id="@+id/dark_mode_switch"-->
+<!--                        android:layout_width="30dp"-->
+<!--                        android:layout_height="30dp"-->
+<!--                        android:theme="@style/SCBSwitch"-->
+<!--                        android:layout_toEndOf="@+id/txtDarkMode"-->
+<!--                        android:textColor="#64dd17"-->
+<!--                        android:layout_centerVertical="true"-->
+<!--                        android:layout_centerInParent="true"-->
+<!--                        android:layout_alignParentEnd="true"-->
+<!--                        tools:ignore="UseSwitchCompatOrMaterialXml" />-->
 
-                </RelativeLayout>
+<!--                </RelativeLayout>-->
                 <View
                     android:id="@+id/line3"
                     android:layout_below="@+id/rl1"
