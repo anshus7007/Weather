@@ -31,3 +31,9 @@ An advanced weather app with amazing UI with several features such as\
     <img src="https://user-images.githubusercontent.com/60043003/105570824-804ab780-5d71-11eb-9ce6-ea6d49a37d4d.jpg" width=230 height=430>
 
 </p>
+
+
+
+
+PR's are most welcome 
+:heart:
