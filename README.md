@@ -11,6 +11,6 @@ An advanced weather app with amazing UI with several features such as\
 <p float="left">
 <img src="https://forthebadge.com/images/badges/built-for-android.svg" alt="Made with love in India">
 <!-- <img src="https://forthebadge.com/images/badges/built-with-love.svg" alt="Made with love in India"> -->
-    <img src="https://madewithlove.now.sh/in?heart=true&template=flat-square" alt="Made with love in India">
+    <img src="https://madewithlove.now.sh/in?heart=true&template=flat-square" width=195 height=35 alt="Made with love in India">
 
 </p>
